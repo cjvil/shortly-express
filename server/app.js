@@ -78,6 +78,49 @@ app.post('/links',
 // Write your authentication routes here
 /************************************************************/
 
+// app.post('/login', ()
+
+app.post('/signup', (req, res, next) => {
+  console.log('MODELS: ', JSON.stringify(models));
+  var username = req.body.username;
+  var password = req.body.password;
+
+  models.Users.get({username: username})
+    .then((result) => {
+      console.log('result: ', result);
+      
+      if (result) {
+        console.log('username already exists', username);
+      } else {
+        return models.Users.create({username: username, password: password});
+      }
+    })
+    .then(() => {
+      res.send('Successful signup');
+    })
+    .catch((err) => {
+      console.log('error', err);
+    });
+          // (err) => {
+          //   console.log('FAIL', err);
+          //   res.send('Sorry, could not add you to the system');
+          // }
+  //       res.send('Successful signup');
+  //   })
+  //   .catch(() => {
+  //     res.send('Failed signup');
+  //   });
+    
+
+  // // models.Users.create({username: username, password: password})
+  //   .then(() => {
+  //     res.send('Successful signup');
+  //   },
+  //     (err) => {
+  //       console.log('FAIL', err);
+  //       res.send('Sorry, could not add you to the system');
+  //     });
+});
 
 
 /************************************************************/

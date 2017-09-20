@@ -13,7 +13,7 @@ var port = 4568;
 // Remove the 'x' from beforeEach block when working on
 // authentication tests.
 /************************************************************/
-var xbeforeEach = function() {};
+//var beforeEach = function() {};
 /************************************************************/
 
 
@@ -34,6 +34,7 @@ describe('', function() {
   };
 
   beforeEach(function(done) {
+    console.log('setting up database connection');
 
     /*************************************************************************************/
     /* TODO: Update user and password if different than on your local machine            */
@@ -123,7 +124,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Account Creation:', function() {
+  describe('Account Creation:', function() {
 
     it('signup creates a new user record', function(done) {
       var options = {
@@ -610,7 +611,7 @@ describe('', function() {
       }
     };
 
-    xbeforeEach(function(done) {
+    beforeEach(function(done) {
       var options = {
         'method': 'POST',
         'followAllRedirects': true,
