@@ -91,37 +91,51 @@ app.post('/signup', (req, res, next) => {
       
       if (result) {
         console.log('username already exists', username);
+        res.redirect('/signup');
       } else {
         return models.Users.create({username: username, password: password});
       }
     })
     .then(() => {
-      res.send('Successful signup');
+      res.redirect('/');
     })
     .catch((err) => {
       console.log('error', err);
     });
-          // (err) => {
-          //   console.log('FAIL', err);
-          //   res.send('Sorry, could not add you to the system');
-          // }
-  //       res.send('Successful signup');
-  //   })
-  //   .catch(() => {
-  //     res.send('Failed signup');
-  //   });
-    
-
-  // // models.Users.create({username: username, password: password})
-  //   .then(() => {
-  //     res.send('Successful signup');
-  //   },
-  //     (err) => {
-  //       console.log('FAIL', err);
-  //       res.send('Sorry, could not add you to the system');
-  //     });
 });
 
+// route POST to /login
+// get username, pw from req body
+// get user info (hashed pw, salt) from users table
+// compare
+// if error, redirect to login
+// if compare === false, redirect to login
+
+app.post('/login', (req, res, next) => {
+  var username = req.body.username;
+  var password = req.body.password;
+
+  models.Users.get({username: username})
+  .then((userInfo) => {
+    if (!userInfo) {
+      res.redirect('/login');
+    } else {
+      console.log(userInfo);
+      console.log('password: ' + password);
+      return models.Users.compare(password, userInfo.password, userInfo.salt);
+    }    
+  })
+  .then((match) => {
+    console.log(match);
+    if (match) {
+      res.redirect('/');
+    } else {
+      console.log('password does not match');
+      res.redirect('/login');
+    }
+  });
+
+});
 
 /************************************************************/
 // Handle the code parameter route last - if all other routes fail

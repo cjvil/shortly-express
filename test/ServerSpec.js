@@ -34,7 +34,6 @@ describe('', function() {
   };
 
   beforeEach(function(done) {
-    console.log('setting up database connection');
 
     /*************************************************************************************/
     /* TODO: Update user and password if different than on your local machine            */
@@ -209,7 +208,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Account Login:', function() {
+  describe('Account Login:', function() {
 
     beforeEach(function(done) {
       var options = {
