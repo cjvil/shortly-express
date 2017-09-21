@@ -455,6 +455,7 @@ describe('', function() {
 
               createSession(requestWithCookies, secondResponse, function() {
                 var session = requestWithCookies.session;
+                console.log('req sess obj inside test ', session);
                 expect(session).to.be.an('object');
                 expect(session.user.username).to.eq(username);
                 expect(session.userId).to.eq(userId);
@@ -465,6 +466,11 @@ describe('', function() {
         });
       });
 
+
+      // get from sessions table using cookie hash
+      // set cookies.shortlyid to {}
+      // create session
+      // 
       it('clears and reassigns a new cookie if there is no session assigned to the cookie', function(done) {
         var maliciousCookieHash = '8a864482005bcc8b968f2b18f8f7ea490e577b20';
         var response = httpMocks.createResponse();
