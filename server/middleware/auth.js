@@ -38,40 +38,38 @@ module.exports.createSession = (req, res, next) => {
       .catch((err) => {
         console.log('error', err);
       });
-
-
   } else {
+    console.log('cookies found');
     req.session = {
       hash: req.cookies.shortlyid,
       user: {}
     };
 
-
     // look up session by hash
     models.Sessions.get({hash: req.cookies.shortlyid})
       .then((session) => {
-        console.log('inside promises', session);
-        console.log(session.userId);
-        req.session.user.userId = session.userId;
-        console.log('session' + JSON.stringify(req.session));
-        console.log(session.user.username);
-        req.session.user.username = session.user.username;
-        console.log(req.session.user);
-        return models.Users.get({id: session.userId});
+        console.log('with cookies session', session);
+        req.session.userId = session.userId;
+        if (session.user) {
+          req.session.user.username = session.user.username;
+          console.log('with cookies req.session', req.session);
+          return models.Users.get({id: session.userId});
+        } else {
+          return {
+            username: null,
+            userId: null
+          };
+        }
       })
       .then((user) => {
-        console.log('returned user', user);
         req.session.user.username = user.username;
+        console.log('session' + JSON.stringify(req.session));
         next();
+      })
+      .catch((err) => {
+        console.log('error ', err);
       }); 
-
-    next();
   }
-
-  
-  // .then(() => {
-  //   res.end();
-  // });
 };
 
 /************************************************************/
