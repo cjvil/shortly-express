@@ -1,19 +1,24 @@
 const models = require('../models');
-const crypto = require('../lib/hashUtils.js');
 const Promise = require('bluebird');
 
 module.exports.createSession = (req, res, next) => {
+  console.log('creating session!!!!');
   if (Object.keys(req.cookies).length === 0) {
-    console.log('no cookies found');
+    console.log('No cookies found');
 
     models.Sessions.create()
       .then((result) => {
+        console.log('Created session');
         return models.Sessions.get({id: result.insertId});
       })
       .then((session) => {
+        console.log('Adding cookie');
         res.cookies = {
           shortlyid: {value: session.hash}
         };
+        
+        // can add options (ex. expiration) as 3rd parameter
+        res.cookie('shortlyid', session.hash);
 
         req.session = {hash: session.hash};
         req.session.user = {};
@@ -59,7 +64,7 @@ module.exports.createSession = (req, res, next) => {
               req.session.user = {};
               req.session.user.userId = session.userId;
 
-              console.log(session);
+              console.log('Session when cookies found: ', session);
               console.log(req.session);
               return models.Users.get({id: session.userId});      
             })
