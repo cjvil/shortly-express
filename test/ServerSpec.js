@@ -392,6 +392,7 @@ describe('', function() {
         createSession(requestWithoutCookie, response, function() {
           var cookies = response.cookies;
           expect(cookies['shortlyid']).to.exist;
+          console.log('cookies found', cookies['shortlyid'].value);
           expect(cookies['shortlyid'].value).to.exist;
           done();
         });
