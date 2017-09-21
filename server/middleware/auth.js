@@ -3,10 +3,19 @@ const Promise = require('bluebird');
 
 module.exports.createSession = (req, res, next) => {
   console.log('inside session parser');
-  models.Session.create()
-  .then(() => {
+
+  if (!req.cookies) {
+    models.Session.create()
+    .then(() => {
+      res.end();
+    });
+  } else {
     res.end();
-  });
+  }
+  
+  // .then(() => {
+  //   res.end();
+  // });
 };
 
 /************************************************************/
