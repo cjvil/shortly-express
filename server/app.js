@@ -115,6 +115,7 @@ app.post('/signup', (req, res, next) => {
 // if compare === false, redirect to login
 
 app.post('/login', (req, res, next) => {
+  console.log('Starting login');
   var username = req.body.username;
   var password = req.body.password;
 
@@ -129,15 +130,22 @@ app.post('/login', (req, res, next) => {
     }    
   })
   .then((match) => {
-    console.log(match);
+    console.log('Successful login');
     if (match) {
-      res.redirect('/');
+      return models.Users.get({username: req.body.username});
+      
+      
     } else {
       console.log('password does not match');
       res.redirect('/login');
     }
+  })
+  .then((user) => {
+    req.session.user.userId = user.id;
+    res.redirect('/');
   });
 });
+
 
 /************************************************************/
 // Handle the code parameter route last - if all other routes fail

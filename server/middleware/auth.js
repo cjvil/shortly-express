@@ -20,19 +20,29 @@ module.exports.createSession = (req, res, next) => {
         // can add options (ex. expiration) as 3rd parameter
         res.cookie('shortlyid', session.hash);
 
+
         req.session = {hash: session.hash};
         req.session.user = {};
-        req.session.user.userId = session.userId;
-
         console.log(session);
         console.log(req.session);
-        return models.Users.get({id: session.userId});      
+
+        console.log('request body', req.body);
+
+        // return models.Sessions.update({hash: session.hash}, {userId: })
+        if (session.userId) {
+          return models.Users.get({username: req.body.username});
+        } else {
+          return models.Users.get({id: session.userId});     
+        }
+        
       })
       .then((user) => {
         console.log('user: ', user);
         if (user) {
+          req.session.user.userId = user.id;
           req.session.user.username = user.username;
         } else {
+          req.session.user.userId = null;
           req.session.user.username = null;
         }
 
@@ -66,7 +76,9 @@ module.exports.createSession = (req, res, next) => {
 
               console.log('Session when cookies found: ', session);
               console.log(req.session);
+
               return models.Users.get({id: session.userId});      
+            
             })
             .then((user) => {
               console.log('user: ', user);
